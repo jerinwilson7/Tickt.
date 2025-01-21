@@ -8,19 +8,25 @@ import {
 } from '../screens';
 import LoginScreen from '../screens/LoginScreen';
 import TabNavigator from './tab-navigation';
+import { useAuth } from '../providers';
 
 export type RootStackParamList = {
   MovieDetails: {id: number};
   SeatBooking: {movie: MovieDetails};
   Tab: undefined;
-  Login: undefined;
   Register: undefined;
+  Home: undefined;
+  Search: undefined;
   Tickets: {ticketDetails: BookingDetails};
+  User: undefined;
+  Login: {redirectTo?:keyof RootStackParamList};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Navigation = () => {
+  const {user} = useAuth()
+  
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -38,6 +44,11 @@ const Navigation = () => {
           name="SeatBooking"
           component={SeatBookingScreen}
           options={{animation: 'slide_from_bottom'}}
+          listeners={({navigation})=>({
+            focus:()=>{
+              !user && navigation.navigate('Login',{redirectTo:'SeatBooking'})
+            }
+          })}
         />
         <Stack.Screen
           name="Tickets"

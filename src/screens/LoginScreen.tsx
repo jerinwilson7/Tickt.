@@ -1,20 +1,19 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ImageBackground, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../../theme';
 import { baseImagePath } from '../api/TMDB';
 import { AuthButton } from '../components/atoms';
 import { RootStackParamList } from '../navigation/navigation';
-import { useAuth } from '../providers';
 import { getBackground } from '../services/TMDB';
 import { LoginForm } from '../components/molecules';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-const LoginScreen = ({navigation}: LoginProps) => {
+const LoginScreen = ({navigation,route}: LoginProps) => {
   const [backdropImage, setBackdropImage] = useState();
-  const {user, isAuthenticating, signIn} = useAuth();
+  const {redirectTo} =route.params 
 
   useEffect(() => {
     const fetchBackground = async () => {
@@ -28,17 +27,12 @@ const LoginScreen = ({navigation}: LoginProps) => {
     fetchBackground();
   }, []);
 
-  const handleLogin = async () => {
-    try {
-      if (user && !isAuthenticating) {
-        navigation.goBack();
-      }
-      if (!signIn) return;
-      const res = await signIn('jerin@gmail.com', '123456789');
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleNavigation = async () => {
+    if (redirectTo) {
+       navigation.goBack()
+    } else {
+      navigation.navigate('Tab');  
+    }  
   };
 
   return (
@@ -64,7 +58,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
         </Text>
       </View>
       <View style={styles.credentialContainer}>
-        <LoginForm/>
+        <LoginForm navigationAction={handleNavigation}/>
 
         <View style={styles.rulerContainer}>
           <View style={styles.ruler} />
@@ -76,12 +70,12 @@ const LoginScreen = ({navigation}: LoginProps) => {
           <AuthButton
             buttonText="Sign in with Facebook"
             bordered
-            action={handleLogin}
+            action={handleNavigation}
           />
           <AuthButton
             buttonText="Sign in with Google"
             bordered
-            action={handleLogin}
+            action={handleNavigation}
           />
         </View>
         <Text style={styles.redirectText}>

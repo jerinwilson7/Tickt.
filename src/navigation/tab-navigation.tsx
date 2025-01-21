@@ -2,15 +2,18 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StyleSheet, View} from 'react-native';
 import {COLORS, FONTSIZE, SPACING} from '../../theme';
 import CustomIcon from '../icons/custom-icon';
-import {SearchScreen, TicketScreen, UserAccountScreen} from '../screens';
-import HomeScreen from '../screens/HomeScreen';
+import {
+  HomeScreen,
+  SearchScreen,
+  OrderScreen,
+  UserAccountScreen,
+} from '../screens';
 
 export type TabRootParamList = {
   Home: undefined;
   Search: undefined;
-  Tickets: {ticketDetails: BookingDetails};
+  Orders: {ticketDetails: BookingDetails};
   User: undefined;
-  Login: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabRootParamList>();
@@ -76,8 +79,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Tickets"
-        component={TicketScreen}
+        name="Orders"
+        component={OrderScreen}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({focused, color, size}) => {

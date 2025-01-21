@@ -15,7 +15,11 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
   'Login'
 >;
 
-export const LoginForm = () => {
+interface LoginForm {
+  navigationAction:()=>void
+}
+
+export const LoginForm = ({navigationAction}:LoginForm) => {
   const [error, setError] = useState<string | null>(null);
   const navigation = useNavigation<LoginScreenNavigationProp>();
   const {user, signIn, setIsAuthenticating, isAuthenticating} = useAuth();
@@ -43,7 +47,7 @@ export const LoginForm = () => {
         return;
       }
 
-      navigation.navigate('Home');
+      navigationAction();
     } catch (error: any) {
       setError(error);
     }
