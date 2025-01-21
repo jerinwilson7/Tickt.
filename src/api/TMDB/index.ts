@@ -1,4 +1,4 @@
-const API_KEY: string = '86dca36fc83a12f94a801ab5ae0954de';
+const API_KEY: string = '******************';
 
 export const nowPlayingMovies: string = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}`;
 export const popularMovies: string = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
