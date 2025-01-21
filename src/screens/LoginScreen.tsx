@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { ImageBackground, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../../theme';
 import { baseImagePath } from '../api/TMDB';
@@ -42,7 +42,8 @@ const LoginScreen = ({navigation}: LoginProps) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+     <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
         source={{uri: baseImagePath('original', backdropImage!)}}
         style={styles.bgImage}>
@@ -87,7 +88,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
           New to Tickt.? Create an Account.
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

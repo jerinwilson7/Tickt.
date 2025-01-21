@@ -7,48 +7,39 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { COLORS, FONTFAMILY, SPACING } from '../../../theme';
 import { RootStackParamList } from '../../navigation/navigation';
 import { useAuth } from '../../providers';
-import { loginSchema, SignInForm } from '../../schemas';
+import { registerSchema, SignUpForm } from '../../schemas';
 import { AuthButton } from '../atoms';
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<
+type RegisterFormProps = NativeStackNavigationProp<
   RootStackParamList,
-  'Login'
+  'Register'
 >;
 
-export const LoginForm = () => {
-  const [error, setError] = useState<string | null>(null);
-  const navigation = useNavigation<LoginScreenNavigationProp>();
-  const {user, signIn, setIsAuthenticating, isAuthenticating} = useAuth();
+export const RegisterForm = () => {
+  const [error, setError] = useState<string | null>();
+  const {setIsAuthenticating, signUp} = useAuth();
+  const navigation = useNavigation<RegisterFormProps>();
+
   const {
     control,
     formState: {errors},
     handleSubmit,
-  } = useForm<SignInForm>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignUpForm>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: SignInForm) => {
+  const onSubmit = async (data: SignUpForm) => {
     try {
-      if (user && !isAuthenticating) {
-        navigation.navigate('Home');
-      }
-
-      if (!signIn) return;
-      setIsAuthenticating(true)
-
-      const existingUser = await signIn(data.email, data.password);
-      if (!existingUser) {
-        setError('No user Found');
-        setIsAuthenticating(false);
-        return;
-      }
-
+      if (!signUp) return;
+      setIsAuthenticating(true);
+      await signUp(data.email, data.password);
+      setIsAuthenticating(true);
       navigation.navigate('Home');
     } catch (error: any) {
       setError(error);
+      console.log(error);
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -94,7 +85,7 @@ export const LoginForm = () => {
       )}
 
       <AuthButton
-        buttonText="Login"
+        buttonText="Create Account"
         backgroundColor={COLORS.Orange}
         action={handleSubmit(onSubmit)}
       />
