@@ -13,10 +13,11 @@ export const LogoHeader = () => {
 
 const styles = StyleSheet.create({
     container:{
-        marginHorizontal:SPACING.space_32,
+        paddingHorizontal:SPACING.space_32,
         flexDirection:'row',
         gap:SPACING.space_4,
-        alignItems:'center'
+        alignItems:'center',
+        backgroundColor:COLORS.Black,
     },
     title:{
         color:COLORS.White,

@@ -28,6 +28,7 @@ import {
   LogoHeader,
 } from '../components/atoms';
 import {MovieCard, SubMovieCard} from '../components/organisms';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width} = Dimensions.get('window');
 
@@ -64,7 +65,6 @@ export const HomeScreen = ({navigation}: HomeProps) => {
   const stackNavigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-
   if (!nowPlaying && !upcoming && !popular && !topRated) {
     return (
       <View style={styles.loadingContainer}>
@@ -74,96 +74,98 @@ export const HomeScreen = ({navigation}: HomeProps) => {
   }
 
   return (
-    <ScrollView
-      style={styles.ScrollViewContainer}
-      contentContainerStyle={styles.container}>
-      <StatusBar backgroundColor={COLORS.Black} /> 
-      <LogoHeader/>    
-      <CategoryHeader title="Now Playing" />
-      <FlatList
-        horizontal
-        data={nowPlaying}
-        keyExtractor={item => item.id.toString()}
-        decelerationRate={0}
-        pagingEnabled
-        snapToInterval={width * 0.7 + SPACING.space_36}
-        snapToAlignment="center"
-        contentContainerStyle={styles.containerGap36}
-        renderItem={({item, index}) => (
-          <MovieCard
-            movie={{...item, genre_ids: item.genre_ids.slice(0, 3)}}
-            cardFunction={() =>
-              stackNavigation.push('MovieDetails', {id: item.id})
-            }
-            cardWidth={width * 0.7}
-            isFirst={index === 0}
-            isLast={index === popular?.length! - 1}
-            shouldMarginatedAtEnd
-            imagePath={baseImagePath('w780', item.poster_path)}
-          />
-        )}
-      />
-      <CategoryHeader title="Popular" />
-      <FlatList
-        horizontal
-        data={popular}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.containerGap36}
-        renderItem={({item, index}) => (
-          <SubMovieCard
-            movie={{...item}}
-            cardFunction={() =>
-              stackNavigation.push('MovieDetails', {id: item.id})
-            }
-            cardWidth={width / 3}
-            isFirst={index === 0}
-            isLast={index === popular?.length! - 1}
-            shouldMarginatedAtEnd
-            imagePath={baseImagePath('w342', item.poster_path)}
-          />
-        )}
-      />
-      <CategoryHeader title="Upcoming" />
-      <FlatList
-        horizontal
-        data={upcoming}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.containerGap36}
-        renderItem={({item, index}) => (
-          <SubMovieCard
-            movie={{...item}}
-            cardFunction={() =>
-              stackNavigation.push('MovieDetails', {id: item.id})
-            }
-            cardWidth={width / 3}
-            isFirst={index === 0}
-            isLast={index === upcoming?.length! - 1}
-            shouldMarginatedAtEnd
-            imagePath={baseImagePath('w342', item.poster_path)}
-          />
-        )}
-      />
-      <CategoryHeader title="Top Rated" />
-      <FlatList
-        horizontal
-        data={topRated}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.containerGap36}
-        renderItem={({item, index}) => (
-          <SubMovieCard
-            movie={{...item}}
-            cardFunction={() =>
-              stackNavigation.push('MovieDetails', {id: item.id})
-            }
-            cardWidth={width / 3}
-            isFirst={index === 0}
-            isLast={index === upcoming?.length! - 1}
-            shouldMarginatedAtEnd
-            imagePath={baseImagePath('w342', item.poster_path)}
-          />
-        )}
-      />
-    </ScrollView>
+    <SafeAreaView>
+      <LogoHeader />
+      <ScrollView
+        style={styles.ScrollViewContainer}
+        contentContainerStyle={styles.container}>
+        <StatusBar backgroundColor={COLORS.Black} />
+        <CategoryHeader title="Now Playing" />
+        <FlatList
+          horizontal
+          data={nowPlaying}
+          keyExtractor={item => item.id.toString()}
+          decelerationRate={0}
+          pagingEnabled
+          snapToInterval={width * 0.7 + SPACING.space_36}
+          snapToAlignment="center"
+          contentContainerStyle={styles.containerGap36}
+          renderItem={({item, index}) => (
+            <MovieCard
+              movie={{...item, genre_ids: item.genre_ids.slice(0, 3)}}
+              cardFunction={() =>
+                stackNavigation.push('MovieDetails', {id: item.id})
+              }
+              cardWidth={width * 0.7}
+              isFirst={index === 0}
+              isLast={index === popular?.length! - 1}
+              shouldMarginatedAtEnd
+              imagePath={baseImagePath('w780', item.poster_path)}
+            />
+          )}
+        />
+        <CategoryHeader title="Popular" />
+        <FlatList
+          horizontal
+          data={popular}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.containerGap36}
+          renderItem={({item, index}) => (
+            <SubMovieCard
+              movie={{...item}}
+              cardFunction={() =>
+                stackNavigation.push('MovieDetails', {id: item.id})
+              }
+              cardWidth={width / 3}
+              isFirst={index === 0}
+              isLast={index === popular?.length! - 1}
+              shouldMarginatedAtEnd
+              imagePath={baseImagePath('w342', item.poster_path)}
+            />
+          )}
+        />
+        <CategoryHeader title="Upcoming" />
+        <FlatList
+          horizontal
+          data={upcoming}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.containerGap36}
+          renderItem={({item, index}) => (
+            <SubMovieCard
+              movie={{...item}}
+              cardFunction={() =>
+                stackNavigation.push('MovieDetails', {id: item.id})
+              }
+              cardWidth={width / 3}
+              isFirst={index === 0}
+              isLast={index === upcoming?.length! - 1}
+              shouldMarginatedAtEnd
+              imagePath={baseImagePath('w342', item.poster_path)}
+            />
+          )}
+        />
+        <CategoryHeader title="Top Rated" />
+        <FlatList
+          horizontal
+          data={topRated}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.containerGap36}
+          renderItem={({item, index}) => (
+            <SubMovieCard
+              movie={{...item}}
+              cardFunction={() =>
+                stackNavigation.push('MovieDetails', {id: item.id})
+              }
+              cardWidth={width / 3}
+              isFirst={index === 0}
+              isLast={index === upcoming?.length! - 1}
+              shouldMarginatedAtEnd
+              imagePath={baseImagePath('w342', item.poster_path)}
+            />
+          )}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
