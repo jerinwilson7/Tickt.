@@ -30,7 +30,7 @@ interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType>(initialValue);
-export const useAuth =()=> useContext<AuthContextType>(AuthContext);
+export const useAuth = () => useContext<AuthContextType>(AuthContext);
 
 export const AuthContextProvider: React.FC<PropsWithChildren> = ({
   children,
@@ -48,7 +48,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
     setIsLoading(false);
 
     return () => subscriber();
-  },[]);
+  }, []);
 
   const signUp = async (email: string, password: string) => {
     try {
@@ -57,9 +57,9 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
         password,
       );
       return userCredential;
-    } catch (error) {
+    } catch (error: any) {
       console.log('unexpected error occurred while login :', error);
-      throw(error)
+      throw new Error(error.code);
     }
   };
 
@@ -70,9 +70,15 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
         password,
       );
       return userCredential;
-    } catch (error) {
-      console.log('unexpected error occurred while login :', error);
-      throw(error)
+    } catch (error: any) {
+      if (error.code === 'auth/invalid-credential') {
+        throw new Error('Invalid email or password');
+      } else if (error.code === 'auth/user-not-found') {
+        throw new Error('No user found with this email');
+      } else if (error.code === 'auth/wrong-password') {
+        throw new Error('Incorrect password');
+      }
+      throw new Error('Unexpected error occurred while logging in');
     }
   };
 
@@ -86,16 +92,16 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
   const values = {
     user,
     signIn,
-    signOut, 
+    signOut,
     signUp,
     isAuthenticating,
     isLoading,
     setIsAuthenticating,
-  }
+  };
 
-   return (
+  return (
     <AuthContext.Provider value={values}>
       {isLoading ? null : children}
     </AuthContext.Provider>
-   )
+  );
 };
