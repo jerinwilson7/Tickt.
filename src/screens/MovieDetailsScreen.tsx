@@ -31,7 +31,7 @@ type MovieDetailProps = NativeStackScreenProps<
   'MovieDetails'
 >;
 
-const MovieDetailsScreen = ({route}: MovieDetailProps) => {
+export const MovieDetailsScreen = ({route}: MovieDetailProps) => {
   const {id} = route.params;
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
   const [cast, setCast] = useState<Cast[] | null>(null);
@@ -291,4 +291,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MovieDetailsScreen;
