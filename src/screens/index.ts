@@ -1,4 +1,5 @@
 export * from './HomeScreen'
+export * from './LoginScreen'
 export * from './MovieDetailsScreen'
 export * from './SeatBookingScreen'
 export * from './TicketScreen'
