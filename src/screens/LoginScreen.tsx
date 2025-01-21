@@ -8,6 +8,7 @@ import { AuthButton } from '../components/atoms';
 import { RootStackParamList } from '../navigation/navigation';
 import { useAuth } from '../providers';
 import { getBackground } from '../services/TMDB';
+import { LoginForm } from '../components/molecules';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -61,32 +62,8 @@ const LoginScreen = ({navigation}: LoginProps) => {
           Log in to book your next movie adventure.
         </Text>
       </View>
-      <View style={styles.credentiallContainer}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email or Phone Number"
-            placeholderTextColor={COLORS.White}
-            // value={searchInput}
-            // onChangeText={textInput => setSearchInput(textInput)}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            placeholderTextColor={COLORS.White}
-            // value={searchInput}
-            // onChangeText={textInput => setSearchInput(textInput)}
-          />
-        </View>
-
-        <AuthButton
-          buttonText="Login"
-          backgroundColor={COLORS.Orange}
-          action={handleLogin}
-        />
+      <View style={styles.credentialContainer}>
+        <LoginForm/>
 
         <View style={styles.rulerContainer}>
           <View style={styles.ruler} />
@@ -162,12 +139,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.WhiteRGBA32,
     borderRadius: 15,
-    paddingVertical: 4,
-    paddingHorizontal: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  credentiallContainer: {
+  credentialContainer: {
     paddingHorizontal: 25,
     marginTop: SPACING.space_20,
     gap: SPACING.space_20,
