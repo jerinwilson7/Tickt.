@@ -16,15 +16,14 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Header} from 'react-native/Libraries/NewAppScreen';
 import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../../theme';
 import {baseImagePath} from '../api/TMDB';
 import {GenreBox, LoadingIndicator, Rating} from '../components/atoms';
-import {CastCard} from '../components/molecules/cast-card';
 import CustomIcon from '../icons/custom-icon';
 import {RootStackParamList} from '../navigation/navigation';
 import {getCast, getMovie} from '../services/TMDB';
 import {formatDate} from '../utils/date';
+import { CastCard, Header } from '../components/molecules';
 
 type MovieDetailProps = NativeStackScreenProps<
   RootStackParamList,

@@ -21,7 +21,7 @@ import {baseImagePath} from '../api/TMDB';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomIcon from '../icons/custom-icon';
 import { RootStackParamList } from '../navigation/navigation';
-import { Header } from 'react-native/Libraries/NewAppScreen';
+import { Header } from '../components/molecules';
 
 type TicketProps = NativeStackScreenProps<RootStackParamList, 'Tickets'>;
 

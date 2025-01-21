@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "286054524504",
+    "project_id": "tickt-91365",
+    "storage_bucket": "tickt-91365.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286054524504:android:724cd888e845da1d974c2d",
+        "android_client_info": {
+          "package_name": "com.tickt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnS11QmrJQ6VlaHctnu-JbY5jaWknBi0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
