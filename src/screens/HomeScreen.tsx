@@ -24,8 +24,8 @@ import {TabRootParamList} from '../navigation/tab-navigation';
 import {COLORS, SPACING} from '../../theme';
 import {
   CategoryHeader,
-  InputHeader,
   LoadingIndicator,
+  LogoHeader,
 } from '../components/atoms';
 import {MovieCard, SubMovieCard} from '../components/organisms';
 
@@ -33,7 +33,7 @@ const {width} = Dimensions.get('window');
 
 type HomeProps = NativeStackScreenProps<TabRootParamList, 'Home'>;
 
-const HomeScreen = ({navigation}: HomeProps) => {
+export const HomeScreen = ({navigation}: HomeProps) => {
   const [nowPlaying, setNowPlaying] = useState<Movie[] | undefined>(undefined);
   const [upcoming, setUpcoming] = useState<Movie[] | undefined>(undefined);
   const [popular, setPopular] = useState<Movie[] | undefined>(undefined);
@@ -64,9 +64,6 @@ const HomeScreen = ({navigation}: HomeProps) => {
   const stackNavigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const searchFunction = (keyword: string) => {
-    // implement search functionality
-  };
 
   if (!nowPlaying && !upcoming && !popular && !topRated) {
     return (
@@ -80,10 +77,8 @@ const HomeScreen = ({navigation}: HomeProps) => {
     <ScrollView
       style={styles.ScrollViewContainer}
       contentContainerStyle={styles.container}>
-      <StatusBar backgroundColor={COLORS.Black} />
-      <View style={styles.inputHeaderContainer}>
-        <InputHeader searchFunction={searchFunction} />
-      </View>
+      <StatusBar backgroundColor={COLORS.Black} /> 
+      <LogoHeader/>    
       <CategoryHeader title="Now Playing" />
       <FlatList
         horizontal
@@ -192,5 +187,3 @@ const styles = StyleSheet.create({
     gap: SPACING.space_36,
   },
 });
-
-export default HomeScreen;

@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: FONTSIZE.size_20,
     fontFamily: FONTFAMILY.poppins_semibold,
-    paddingTop: SPACING.space_36,
+    paddingTop: SPACING.space_24,
     paddingLeft: SPACING.space_28,
     paddingBottom: SPACING.space_24,
   },
