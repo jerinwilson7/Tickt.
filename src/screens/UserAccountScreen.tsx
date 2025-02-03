@@ -1,12 +1,15 @@
-import {Text, View, StyleSheet, Image} from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { COLORS, SPACING } from '../../theme';
+import { AuthButton } from '../components/atoms';
+import { Header } from '../components/molecules';
 import { TabRootParamList } from '../navigation/tab-navigation';
-import { Header } from 'react-native/Libraries/NewAppScreen';
-import { SPACING } from '../../theme';
+import { useAuth } from '../providers';
 
 type AccountProps = NativeStackScreenProps<TabRootParamList, 'User'>;
 
 export const UserAccountScreen = ({navigation, route}: AccountProps) => {
+  const {signOut} = useAuth()
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -25,6 +28,7 @@ export const UserAccountScreen = ({navigation, route}: AccountProps) => {
           }}
         />
       <Text style={styles.profileName}>Zara</Text>
+      <AuthButton action={signOut} buttonText='Logout' backgroundColor={COLORS.Orange} />
       </View>
     </View>
   );

@@ -1,34 +1,34 @@
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  StatusBar,
-  FlatList,
-} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {baseImagePath} from '../api/TMDB';
+import { useEffect, useState } from 'react';
+import {
+  Dimensions,
+  FlatList,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS, SPACING } from '../../theme';
 import {
   getNowPlaying,
   getPopular,
   getTopRated,
   getUpcoming,
-} from '../services/TMDB';
-import {RootStackParamList} from '../navigation/navigation';
-import {TabRootParamList} from '../navigation/tab-navigation';
-import {COLORS, SPACING} from '../../theme';
+} from '../api/services/TMDB';
+import { baseImagePath } from '../api/TMDB';
 import {
   CategoryHeader,
   LoadingIndicator,
   LogoHeader,
 } from '../components/atoms';
-import {MovieCard, SubMovieCard} from '../components/organisms';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { MovieCard, SubMovieCard } from '../components/organisms';
+import { RootStackParamList } from '../navigation/navigation';
+import { TabRootParamList } from '../navigation/tab-navigation';
 
 const {width} = Dimensions.get('window');
 

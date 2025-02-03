@@ -2,17 +2,17 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import {
-    Dimensions,
-    FlatList,
-    StyleSheet,
-    View,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  View,
 } from 'react-native';
 import { SPACING } from '../../theme';
+import { getPopular } from '../api/services/TMDB';
 import { baseImagePath, searchMovies } from '../api/TMDB';
 import { InputHeader } from '../components/atoms';
 import { SubMovieCard } from '../components/organisms';
 import { RootStackParamList } from '../navigation/navigation';
-import { getPopular } from '../services/TMDB';
 
 export const SearchScreen = () => {
   const [filteredMovies, setFilteredMovies] = useState<Movie[] | undefined>();

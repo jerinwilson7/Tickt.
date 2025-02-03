@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { COLORS, FONTFAMILY, SPACING } from '../../../theme';
+import { useRegister } from '../../hooks/api/auth/useRegister';
 import { RootStackParamList } from '../../navigation/navigation';
 import { useAuth } from '../../providers';
 import { registerSchema, SignUpForm } from '../../schemas';
@@ -19,6 +20,7 @@ export const RegisterForm = () => {
   const [error, setError] = useState<string | null>();
   const {setIsAuthenticating, signUp} = useAuth();
   const navigation = useNavigation<RegisterFormProps>();
+  const {mutateAsync:register} = useRegister()
 
   const {
     control,
@@ -32,7 +34,12 @@ export const RegisterForm = () => {
     try {
       if (!signUp) return;
       setIsAuthenticating(true);
-      await signUp(data.email, data.password);
+      const userCredentials = await signUp(data.email, data.password);
+      if(userCredentials){
+        console.log("first",userCredentials)
+        const res = await register({email:userCredentials.user.email!,uid:userCredentials.user.uid})
+        console.log("RES FORM :",res)
+      }
       setIsAuthenticating(true);
       navigation.navigate('Home');
     } catch (error: any) {

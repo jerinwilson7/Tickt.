@@ -1,19 +1,22 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {StyleSheet, View} from 'react-native';
-import {COLORS, FONTSIZE, SPACING} from '../../theme';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StyleSheet, View } from 'react-native';
+import { COLORS, FONTSIZE, SPACING } from '../../theme';
 import CustomIcon from '../icons/custom-icon';
 import {
   HomeScreen,
   SearchScreen,
-  OrderScreen,
-  UserAccountScreen,
+  UserAccountScreen
 } from '../screens';
+import LoginScreen from '../screens/LoginScreen';
+import { RootStackParamList } from './navigation';
 
 export type TabRootParamList = {
   Home: undefined;
   Search: undefined;
   Orders: {ticketDetails: BookingDetails};
   User: undefined;
+  Register: undefined;
+  Login: {redirectTo?: keyof RootStackParamList};
 };
 
 const Tab = createBottomTabNavigator<TabRootParamList>();
@@ -79,8 +82,9 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Orders"
-        component={OrderScreen}
+        name="Login"
+        component={LoginScreen}
+        initialParams={{redirectTo:'Home'}}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({focused, color, size}) => {

@@ -1,4 +1,4 @@
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import React, {
   createContext,
   PropsWithChildren,
@@ -56,6 +56,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
         email,
         password,
       );
+      console.log(userCredential)
       return userCredential;
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
@@ -71,6 +72,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
         email,
         password,
       );
+      console.log("USER",await userCredential.user.getIdToken())
       return userCredential;
     } catch (error: any) {
       if (error.code === 'auth/invalid-credential') {

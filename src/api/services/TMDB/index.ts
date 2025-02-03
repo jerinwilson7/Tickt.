@@ -1,4 +1,4 @@
-import { movieCastDetails, movieDetails, nowPlayingMovies, popularMovies, searchMovies, topRatedMovies, upcomingMovies } from "../../api/TMDB";
+import { movieCastDetails, movieDetails, nowPlayingMovies, popularMovies, searchMovies, topRatedMovies, upcomingMovies } from "../../TMDB";
 
   
   export const getNowPlaying = async () => {

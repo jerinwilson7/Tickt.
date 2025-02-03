@@ -1,19 +1,27 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { ImageBackground, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import {
+  ImageBackground,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../../theme';
+import { getBackground } from '../api/services/TMDB';
 import { baseImagePath } from '../api/TMDB';
 import { AuthButton } from '../components/atoms';
-import { RootStackParamList } from '../navigation/navigation';
-import { getBackground } from '../services/TMDB';
 import { LoginForm } from '../components/molecules';
+import { RootStackParamList } from '../navigation/navigation';
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
-const LoginScreen = ({navigation,route}: LoginProps) => {
+const LoginScreen = ({navigation, route}: LoginProps) => {
   const [backdropImage, setBackdropImage] = useState();
-  const {redirectTo} =route.params 
+  const {redirectTo} = route.params;
+
 
   useEffect(() => {
     const fetchBackground = async () => {
@@ -29,15 +37,24 @@ const LoginScreen = ({navigation,route}: LoginProps) => {
 
   const handleNavigation = async () => {
     if (redirectTo) {
-       navigation.goBack()
+      navigation.goBack();
     } else {
-      navigation.navigate('Tab');  
-    }  
+      navigation.navigate('Tab');
+    }
+  };
+
+  const handleOktaSignIn = async () => {
+    try {
+      // Initiate the sign-in flow
+      console.log('hai')
+    } catch (error) {
+      console.error('Sign-in error:', error);
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-     <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
         source={{uri: baseImagePath('original', backdropImage!)}}
         style={styles.bgImage}>
@@ -58,7 +75,7 @@ const LoginScreen = ({navigation,route}: LoginProps) => {
         </Text>
       </View>
       <View style={styles.credentialContainer}>
-        <LoginForm navigationAction={handleNavigation}/>
+        <LoginForm navigationAction={handleNavigation} />
 
         <View style={styles.rulerContainer}>
           <View style={styles.ruler} />
@@ -75,7 +92,7 @@ const LoginScreen = ({navigation,route}: LoginProps) => {
           <AuthButton
             buttonText="Sign in with Google"
             bordered
-            action={handleNavigation}
+            action={handleOktaSignIn}
           />
         </View>
         <Text style={styles.redirectText}>

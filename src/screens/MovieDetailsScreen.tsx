@@ -1,13 +1,14 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
   ImageBackground,
+  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -16,14 +17,15 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../../theme';
-import {baseImagePath} from '../api/TMDB';
-import {GenreBox, LoadingIndicator, Rating} from '../components/atoms';
-import CustomIcon from '../icons/custom-icon';
-import {RootStackParamList} from '../navigation/navigation';
-import {getCast, getMovie} from '../services/TMDB';
-import {formatDate} from '../utils/date';
+import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../../theme';
+import { getCast, getMovie } from '../api/services/TMDB';
+import { baseImagePath } from '../api/TMDB';
+import { GenreBox, LoadingIndicator, Rating } from '../components/atoms';
 import { CastCard, Header } from '../components/molecules';
+import CustomIcon from '../icons/custom-icon';
+import { RootStackParamList } from '../navigation/navigation';
+import { useAuth } from '../providers';
+import { formatDate } from '../utils/date';
 
 type MovieDetailProps = NativeStackScreenProps<
   RootStackParamList,
@@ -36,6 +38,7 @@ export const MovieDetailsScreen = ({route}: MovieDetailProps) => {
   const [cast, setCast] = useState<Cast[] | null>(null);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const {signOut} = useAuth()
 
   useEffect(() => {
     (async () => {
@@ -65,95 +68,99 @@ export const MovieDetailsScreen = ({route}: MovieDetailProps) => {
   }
 
   return (
-    <ScrollView
-      bounces={false}
-      style={styles.container}
-      contentContainerStyle={{paddingBottom: 32}}>
-      <StatusBar hidden translucent backgroundColor="transparent" />
-      <View style={styles.detailContainer}>
-        <ImageBackground
-          style={styles.backdrop}
-          source={{uri: baseImagePath('original', movieDetails.backdrop_path)}}>
-          <LinearGradient
-            colors={[COLORS.BlackRGB10, COLORS.Black]}
-            style={styles.linearGradient}>
-            <View style={styles.header}>
-              <Header
-                iconName="close"
-                action={() => navigation.goBack()}
-                title=""
-              />
-            </View>
-          </LinearGradient>
-        </ImageBackground>
-        <View style={[styles.posterContainer]}></View>
-        <Image
-          source={{uri: baseImagePath('w342', movieDetails.poster_path)}}
-          style={styles.posterImage}
-          resizeMode="contain"
-        />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Header iconName="close" action={() => navigation.goBack()} title="" />
       </View>
-
-      <View style={styles.contentContainer}>
-        <View style={styles.runtimeContainer}>
-          <CustomIcon name="clock" size={18} color={COLORS.WhiteRGBA75} />
-          <Text style={styles.runtimeText}>
-            {Math.floor(movieDetails?.runtime / 60)}h{' '}
-            {Math.floor(movieDetails?.runtime % 60)}m
-          </Text>
-        </View>
-
-        <Text style={styles.title}>{movieDetails.title}</Text>
-
-        <View style={styles.genreContainer}>
-          {movieDetails.genres.map(genre => (
-            <GenreBox id={genre.id} key={genre.id} />
-          ))}
-        </View>
-
-        <Text style={styles.tagline}>{movieDetails.tagline}</Text>
-      </View>
-
-      <View style={styles.aboutContainer}>
-        <View style={styles.releaseRatingContainer}>
-          <Rating
-            voteAvg={movieDetails.vote_average}
-            voteCount={movieDetails.vote_count}
+      <ScrollView
+        bounces={false}
+        style={styles.container}
+        contentContainerStyle={{paddingBottom: 32}}>
+        <StatusBar hidden translucent backgroundColor="transparent" />
+        <View style={styles.detailContainer}>
+          <ImageBackground
+            style={styles.backdrop}
+            source={{
+              uri: baseImagePath('original', movieDetails.backdrop_path),
+            }}>
+            <LinearGradient
+              colors={[COLORS.BlackRGB10, COLORS.Black]}
+              style={styles.linearGradient}></LinearGradient>
+          </ImageBackground>
+          <View style={[styles.posterContainer]}></View>
+          <Image
+            source={{uri: baseImagePath('w342', movieDetails.poster_path)}}
+            style={styles.posterImage}
+            resizeMode="contain"
           />
-          <Text style={styles.releaseDate}>
-            {formatDate(movieDetails.release_date)}
-          </Text>
         </View>
-        <Text style={styles.overView}>{movieDetails.overview}</Text>
-      </View>
 
-      <View style={styles.castContainer}>
-        <Text style={styles.castHeader}>Top Cast</Text>
-        <FlatList
-          horizontal
-          data={cast}
-          decelerationRate={0}
-          pagingEnabled
-          contentContainerStyle={{gap: SPACING.space_36}}
-          keyExtractor={(item: Cast) => item.cast_id}
-          renderItem={({item, index}) => (
-            <CastCard castDetails={{...item}} width={80} />
-          )}
-        />
-      </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.runtimeContainer}>
+            <CustomIcon name="clock" size={18} color={COLORS.WhiteRGBA75} />
+            <Text style={styles.runtimeText}>
+              {Math.floor(movieDetails?.runtime / 60)}h{' '}
+              {Math.floor(movieDetails?.runtime % 60)}m
+            </Text>
+          </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() =>
-            navigation.push('SeatBooking', {
-              movie: movieDetails,
-            })
-          }>
-          <Text style={styles.buttonText}>Select Seats</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <Text style={styles.title}>{movieDetails.title}</Text>
+
+          <View style={styles.genreContainer}>
+            {movieDetails.genres.slice(0,3).map(genre => (
+              <GenreBox id={genre.id} key={genre.id} />
+            ))}
+          </View>
+
+          <Text style={styles.tagline}>{movieDetails.tagline}</Text>
+        </View>
+
+        <View style={styles.aboutContainer}>
+          <View style={styles.releaseRatingContainer}>
+            <Rating
+              voteAvg={movieDetails.vote_average}
+              voteCount={movieDetails.vote_count}
+            />
+            <Text style={styles.releaseDate}>
+              {formatDate(movieDetails.release_date)}
+            </Text>
+          </View>
+          <Text style={styles.overView}>{movieDetails.overview}</Text>
+        </View>
+
+        <View style={styles.castContainer}>
+          <Text style={styles.castHeader}>Top Cast</Text>
+          <FlatList
+            horizontal
+            data={cast}
+            decelerationRate={0}
+            pagingEnabled
+            contentContainerStyle={{gap: SPACING.space_36}}
+            keyExtractor={(item: Cast) => item.cast_id}
+            renderItem={({item, index}) => (
+              <CastCard castDetails={{...item}} width={80} />
+            )}
+          />
+        </View>
+
+      </ScrollView>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              navigation.push('SeatBooking', {
+                movie: movieDetails,
+              })
+            }>
+            {/* onPress={() =>
+              navigation.push('SeatBooking', {
+                movie: movieDetails,
+              })
+            }> */}
+            <Text style={styles.buttonText}>Select Seats</Text>
+          </TouchableOpacity>
+        </View>
+    </SafeAreaView>
   );
 };
 
@@ -176,6 +183,9 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    position: 'absolute',
+    top: 5,
+    zIndex: 50,
     marginTop: SPACING.space_15 * 2,
     marginHorizontal: SPACING.space_36 + 2,
   },
@@ -289,4 +299,3 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_medium,
   },
 });
-

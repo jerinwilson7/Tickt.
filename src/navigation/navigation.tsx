@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAuth } from '../providers';
 import {
   MovieDetailsScreen,
   RegisterScreen,
@@ -8,7 +9,6 @@ import {
 } from '../screens';
 import LoginScreen from '../screens/LoginScreen';
 import TabNavigator from './tab-navigation';
-import { useAuth } from '../providers';
 
 export type RootStackParamList = {
   MovieDetails: {id: number};

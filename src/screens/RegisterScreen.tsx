@@ -1,20 +1,27 @@
-import {useEffect, useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
 import {
   ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  View,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../../theme';
-import {baseImagePath} from '../api/TMDB';
-import {AuthButton} from '../components/atoms';
-import {getBackground} from '../services/TMDB';
+import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../../theme';
+import { getBackground } from '../api/services/TMDB';
+import { baseImagePath } from '../api/TMDB';
+import { AuthButton } from '../components/atoms';
 import { RegisterForm } from '../components/molecules';
+import { RootStackParamList } from '../navigation/navigation';
+
+type RegisterProps = NativeStackScreenProps<RootStackParamList,'Register'>
 
 export const RegisterScreen = () => {
+  const {navigation} = useNavigation<RegisterProps>()
   const [backdropImage, setBackdropImage] = useState();
   useEffect(() => {
     const fetchBackground = async () => {
@@ -69,9 +76,12 @@ export const RegisterScreen = () => {
             action={() => {}}
           />
         </View>
+        <TouchableOpacity onPress={()=>navigation.navigate('User')}>
+
         <Text style={styles.redirectText}>
           Already have an account? Sign In.
         </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
