@@ -1,14 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { COLORS, FONTFAMILY, SPACING } from '../../../theme';
 import { useRegister } from '../../hooks/api/auth/useRegister';
 import { RootStackParamList } from '../../navigation/navigation';
 import { useAuth } from '../../providers';
 import { registerSchema, SignUpForm } from '../../schemas';
+import { CustomError } from '../../utils/error';
 import { AuthButton } from '../atoms';
 
 type RegisterFormProps = NativeStackNavigationProp<
@@ -17,10 +18,11 @@ type RegisterFormProps = NativeStackNavigationProp<
 >;
 
 export const RegisterForm = () => {
-  const [error, setError] = useState<string | null>();
-  const {setIsAuthenticating, signUp} = useAuth();
-  const navigation = useNavigation<RegisterFormProps>();
-  const {mutateAsync:register,isPending} = useRegister()
+  const [errorMessage, setErrorMessage] = useState<string>(
+    'An unexpected error occurred during register',
+  );
+  const {setIsAuthenticating, user, signOut, signUp} = useAuth();
+  const {mutateAsync: register, isPending} = useRegister();
 
   const {
     control,
@@ -31,21 +33,55 @@ export const RegisterForm = () => {
   });
 
   const onSubmit = async (data: SignUpForm) => {
-    try {
-      if (!signUp) return;
-      setIsAuthenticating(true);
-      const userCredentials = await signUp(data.email, data.password);
-      if(!userCredentials){
-        return 
-      }
-      const res = await register({email:userCredentials.user.email!,uid:userCredentials.user.uid})
-      console.log("RES FORM :",res)
-      setIsAuthenticating(true);
-      navigation.navigate('Home');
-    } catch (error: any) {
-      setError(error);
-      console.log("ERROR",error);
+  try {
+    if (!signUp) return;
+
+    setIsAuthenticating(true);
+    const userCredentials = await signUp(data.email, data.password);
+
+    await register(
+      {
+        email: userCredentials.user.email!,
+        uid: userCredentials.user.uid,
+      },
+      {
+        onError: () => {
+          setErrorMessage('Server authentication failed');
+          Toast.show({
+            type: 'error',
+            text1: errorMessage,
+          });
+          if (user) {
+            signOut();
+            userCredentials.user.delete();
+          }
+        },
+        onSuccess: () => {
+          Toast.show({
+            text1: 'User registered successfully',
+            type: 'success',
+          });
+        },
+      },
+    );
+  } catch (error: any) {
+    if (user) {
+      user.delete(); 
     }
+
+    if (error instanceof CustomError) {
+      setErrorMessage(error.message);
+    } else if (error instanceof Error) {
+      setErrorMessage(error.message); 
+    }
+
+    Toast.show({
+      type: 'error',
+      text1: errorMessage, 
+    });
+  } finally {
+    setIsAuthenticating(false); 
+  }
   };
   return (
     <View style={styles.container}>

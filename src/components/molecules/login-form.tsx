@@ -22,7 +22,9 @@ interface LoginForm {
 }
 
 export const LoginForm = ({navigationAction}:LoginForm) => {
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>(
+    'An unexpected error occurred during login',
+  );
   const { signIn,signOut, setIsAuthenticating, isAuthenticating} = useAuth();
   const {mutateAsync:login,isPending:isLoggingIn} = useLogin()
   const {
@@ -48,7 +50,11 @@ export const LoginForm = ({navigationAction}:LoginForm) => {
         {email, token, uid},
         {
           onError: error => {
-            console.log('Login API error:', error);
+            setErrorMessage("sever authentication failed")
+            Toast.show({
+              type:'error',
+              text1:errorMessage
+            })
             signOut
           },
           onSuccess:()=>{
@@ -59,18 +65,19 @@ export const LoginForm = ({navigationAction}:LoginForm) => {
           }
         },
       );
+      Toast.show({
+        text1: 'Login success',
+        type: 'success',
+      });
     } catch (error: any) {
-      let errorMessage = 'An unexpected error occurred during login';
-      let statusCode = 500;
-
+      
       if (error instanceof CustomError) {
-        errorMessage = error.message || errorMessage;
-        statusCode = error.status;
-      } else if (error instanceof Error) {
-        errorMessage = error.message || errorMessage;
+        setErrorMessage(error.message);
+           } else if (error instanceof Error) {
+        setErrorMessage(error.message);
       }
 
-      setLoginError(errorMessage);
+      
       Toast.show({
         type: 'error',
         text1: errorMessage,
