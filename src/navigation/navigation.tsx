@@ -67,7 +67,7 @@ const Navigation = () => {
           />
         </Stack.Navigator>
       )}
-      <Toast/>
+      <Toast position='top'/>
     </NavigationContainer>
   );
 };

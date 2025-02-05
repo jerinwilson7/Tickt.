@@ -60,9 +60,9 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
       return userCredential;
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
-        throw new Error('Email already exists');
+        throw new CustomError('Email already exists',400);
       }
-      throw new Error('unexpected error occurred while login :');
+      throw new CustomError('unexpected error occurred while login',400);
     }
   };
 
