@@ -20,7 +20,7 @@ export const RegisterForm = () => {
   const [error, setError] = useState<string | null>();
   const {setIsAuthenticating, signUp} = useAuth();
   const navigation = useNavigation<RegisterFormProps>();
-  const {mutateAsync:register} = useRegister()
+  const {mutateAsync:register,isPending} = useRegister()
 
   const {
     control,
@@ -35,16 +35,16 @@ export const RegisterForm = () => {
       if (!signUp) return;
       setIsAuthenticating(true);
       const userCredentials = await signUp(data.email, data.password);
-      if(userCredentials){
-        console.log("first",userCredentials)
-        const res = await register({email:userCredentials.user.email!,uid:userCredentials.user.uid})
-        console.log("RES FORM :",res)
+      if(!userCredentials){
+        return 
       }
+      const res = await register({email:userCredentials.user.email!,uid:userCredentials.user.uid})
+      console.log("RES FORM :",res)
       setIsAuthenticating(true);
       navigation.navigate('Home');
     } catch (error: any) {
       setError(error);
-      console.log(error);
+      console.log("ERROR",error);
     }
   };
   return (

@@ -9,7 +9,7 @@ import { useAuth } from '../providers';
 type AccountProps = NativeStackScreenProps<TabRootParamList, 'User'>;
 
 export const UserAccountScreen = ({navigation, route}: AccountProps) => {
-  const {signOut} = useAuth()
+  const {signOut,user} = useAuth()
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -27,7 +27,7 @@ export const UserAccountScreen = ({navigation, route}: AccountProps) => {
             uri: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600',
           }}
         />
-      <Text style={styles.profileName}>Zara</Text>
+      <Text style={styles.profileName}>{user?.email}</Text>
       <AuthButton action={signOut} buttonText='Logout' backgroundColor={COLORS.Orange} />
       </View>
     </View>

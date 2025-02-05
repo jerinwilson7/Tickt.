@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { CustomError } from '../utils/error';
 
 const initialValue = {
   setIsAuthenticating: () => {},
@@ -56,7 +57,6 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
         email,
         password,
       );
-      console.log(userCredential)
       return userCredential;
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
@@ -72,17 +72,17 @@ export const AuthContextProvider: React.FC<PropsWithChildren> = ({
         email,
         password,
       );
-      console.log("USER",await userCredential.user.getIdToken())
       return userCredential;
     } catch (error: any) {
+      console.log(error)
       if (error.code === 'auth/invalid-credential') {
-        throw new Error('Invalid email or password');
+        throw new CustomError('Invalid email or password',400);
       } else if (error.code === 'auth/user-not-found') {
-        throw new Error('No user found with this email');
+        throw new CustomError('No user found with this email',400);
       } else if (error.code === 'auth/wrong-password') {
-        throw new Error('Incorrect password');
+        throw new CustomError('Incorrect password',400);
       }
-      throw new Error('Unexpected error occurred while logging in');
+      throw new CustomError('Unexpected error occurred while logging in',400);
     }
   };
 

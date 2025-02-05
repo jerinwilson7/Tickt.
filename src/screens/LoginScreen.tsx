@@ -6,7 +6,8 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  View,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { COLORS, FONTFAMILY, FONTSIZE, SPACING } from '../../theme';
@@ -20,7 +21,6 @@ type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const LoginScreen = ({navigation, route}: LoginProps) => {
   const [backdropImage, setBackdropImage] = useState();
-  const {redirectTo} = route.params;
 
 
   useEffect(() => {
@@ -36,11 +36,8 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
   }, []);
 
   const handleNavigation = async () => {
-    if (redirectTo) {
-      navigation.goBack();
-    } else {
+  
       navigation.navigate('Tab');
-    }
   };
 
   const handleOktaSignIn = async () => {
@@ -95,9 +92,11 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
             action={handleOktaSignIn}
           />
         </View>
+        <TouchableOpacity onPress={()=>navigation.push('Register')}>
         <Text style={styles.redirectText}>
           New to Tickt.? Create an Account.
         </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

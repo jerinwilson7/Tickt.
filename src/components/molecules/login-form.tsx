@@ -1,13 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { COLORS, FONTFAMILY, SPACING } from '../../../theme';
+import { useLogin } from '../../hooks/api/auth/useLogin';
 import { RootStackParamList } from '../../navigation/navigation';
 import { useAuth } from '../../providers';
 import { loginSchema, SignInForm } from '../../schemas';
+import { CustomError } from '../../utils/error';
 import { AuthButton } from '../atoms';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<
@@ -20,9 +22,9 @@ interface LoginForm {
 }
 
 export const LoginForm = ({navigationAction}:LoginForm) => {
-  const [error, setError] = useState<string | null>(null);
-  const navigation = useNavigation<LoginScreenNavigationProp>();
-  const {user, signIn, setIsAuthenticating, isAuthenticating} = useAuth();
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const { signIn,signOut, setIsAuthenticating, isAuthenticating} = useAuth();
+  const {mutateAsync:login,isPending:isLoggingIn} = useLogin()
   const {
     control,
     formState: {errors},
@@ -33,25 +35,53 @@ export const LoginForm = ({navigationAction}:LoginForm) => {
 
   const onSubmit = async (data: SignInForm) => {
     try {
-      if (user && !isAuthenticating) {
-        navigation.navigate('Home');
-      }
-
       if (!signIn) return;
-      setIsAuthenticating(true)
+      setIsAuthenticating(true);
 
       const existingUser = await signIn(data.email, data.password);
-      if (!existingUser) {
-        setError('No user Found');
-        setIsAuthenticating(false);
-        return;
+            
+      const email = existingUser.user.email!
+      const token = await existingUser.user.getIdToken();
+      const uid = existingUser.user.uid;
+
+      await login(
+        {email, token, uid},
+        {
+          onError: error => {
+            console.log('Login API error:', error);
+            signOut
+          },
+          onSuccess:()=>{
+            Toast.show({
+              text1:'Login success',
+              type:'success'
+            })
+          }
+        },
+      );
+    } catch (error: any) {
+      let errorMessage = 'An unexpected error occurred during login';
+      let statusCode = 500;
+
+      if (error instanceof CustomError) {
+        errorMessage = error.message || errorMessage;
+        statusCode = error.status;
+      } else if (error instanceof Error) {
+        errorMessage = error.message || errorMessage;
       }
 
-      navigationAction();
-    } catch (error: any) {
-      setError(error);
+      setLoginError(errorMessage);
+      Toast.show({
+        type: 'error',
+        text1: errorMessage,
+      });
+
+    } finally {
+      setIsAuthenticating(false);
     }
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -98,7 +128,7 @@ export const LoginForm = ({navigationAction}:LoginForm) => {
       )}
 
       <AuthButton
-        buttonText="Login"
+        buttonText="Loginx"
         backgroundColor={COLORS.Orange}
         action={handleSubmit(onSubmit)}
       />

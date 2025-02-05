@@ -4,16 +4,16 @@ import { COLORS, FONTSIZE, SPACING } from '../../theme';
 import CustomIcon from '../icons/custom-icon';
 import {
   HomeScreen,
+  OrderScreen,
   SearchScreen,
   UserAccountScreen
 } from '../screens';
-import LoginScreen from '../screens/LoginScreen';
 import { RootStackParamList } from './navigation';
 
 export type TabRootParamList = {
   Home: undefined;
   Search: undefined;
-  Orders: {ticketDetails: BookingDetails};
+  Orders: undefined
   User: undefined;
   Register: undefined;
   Login: {redirectTo?: keyof RootStackParamList};
@@ -82,9 +82,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Login"
-        component={LoginScreen}
-        initialParams={{redirectTo:'Home'}}
+        name="Orders"
+        component={OrderScreen}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({focused, color, size}) => {

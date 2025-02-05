@@ -76,7 +76,7 @@ export const RegisterScreen = () => {
             action={() => {}}
           />
         </View>
-        <TouchableOpacity onPress={()=>navigation.navigate('User')}>
+        <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
 
         <Text style={styles.redirectText}>
           Already have an account? Sign In.
